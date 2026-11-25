@@ -1,6 +1,8 @@
 import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
 import qrcode from "/qrcode.js";
-import { canvasEl, reveal, tilt } from "/fx.js";
+import { install, reveal, tilt } from "/fx.js";
+import { theme, stageHero, beamsOnly } from "/art.js";
+install(theme);
 const toggleTheme = initTheme();
 const S = { user: null };
 const app = $("#app");
@@ -47,7 +49,7 @@ async function home() {
     grid.replaceChildren(...(d.events.length ? d.events.map((e) => { const c = evCard(e); c.classList.add("reveal"); tilt(c); return c; }) : [h("div", { class: "card empty", style: "grid-column:1/-1" }, "No events match. Try another search, or create your own.")])); reveal(grid);
   };
   const search = h("input", { type: "search", placeholder: "Search by name or city", "aria-label": "Search events", style: "max-width:420px", oninput: (e) => { q = e.target.value; clearTimeout(search._t); search._t = setTimeout(run, 250); } });
-  shell(h("div", { class: "stack" }, h("section", { class: "hero2 stack fxwrap", style: "align-items:center" }, h("div", { class: "fxbg" }, canvasEl("p")), h("div", { class: "fxart floaty" }, canvasEl("wire", "ico")), h("h1", {}, "Run your event. Fill the room."), h("p", { class: "muted", style: "max-width:560px;margin:0" }, "Publish an event with an agenda and speakers, hand out free QR tickets and check people in at the door. Attendees can build their own agenda and add it to their calendar."),
+  shell(h("div", { class: "stack" }, h("section", { class: "hero2 stack", style: "align-items:center;padding-bottom:70px" }, h("div", { html: stageHero() }), h("h1", {}, "Run your event. Fill the room."), h("p", { class: "muted", style: "max-width:560px;margin:0" }, "Publish an event with an agenda and speakers, hand out free QR tickets and check people in at the door. Attendees can build their own agenda and add it to their calendar."),
     h("div", { class: "row", style: "justify-content:center" }, h("a", { class: "btn pri", href: "#/new" }, "Create an event"), h("a", { class: "btn", href: "#/lookup" }, "I have a ticket"))),
     h("div", { class: "row spread" }, tabs, search), grid), "home");
   run();
@@ -85,7 +87,7 @@ async function eventPage(slug) {
       h("button", { class: "btn" + (paid ? "" : " pri"), disabled: paid || !left || ended, title: paid ? "Payments are not active yet" : "", onclick: () => regForm(e, t) }, paid ? "Coming soon" : ended ? "Event ended" : left ? "Get free ticket" : "Sold out")));
   });
   const speakers = e.speakers.length ? h("section", { class: "stack" }, h("h2", { style: "margin:0" }, "Speakers"), h("div", { class: "grid" }, e.speakers.map((s) => h("div", { class: "card sp" }, h("div", { class: "av", "aria-hidden": "true" }, s.name.split(/\s+/).filter((w) => /^[A-Za-z\u0600-\u06FF]/.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase() || "?"), h("div", {}, h("b", {}, s.name), h("div", { class: "muted small" }, [s.role, s.org].filter(Boolean).join(", ")), s.bio ? h("div", { class: "small", style: "margin-top:4px" }, s.bio) : null))))) : null;
-  shell(h("div", { class: "stack" }, owner, h("section", { class: "evhero fxwrap" }, h("div", { class: "fxbg" }, canvasEl("p")), h("div", { class: "small", style: "opacity:.85" }, e.sample ? "SAMPLE EVENT" : "EVENT"), h("h1", {}, e.title), h("div", {}, e.tagline), h("div", { style: "margin-top:10px;font-weight:600" }, `${fDT(e.starts)} → ${fD(e.starts) === fD(e.ends) ? fT(e.ends) : fDT(e.ends)}`), h("div", { class: "small", style: "opacity:.85" }, `${[e.venue, e.city].filter(Boolean).join(", ")}${TZ ? " · times in " + TZ : ""}`),
+  shell(h("div", { class: "stack" }, owner, h("section", { class: "evhero" }, h("div", { html: beamsOnly() }), h("div", { class: "small", style: "opacity:.85" }, e.sample ? "SAMPLE EVENT" : "EVENT"), h("h1", {}, e.title), h("div", {}, e.tagline), h("div", { style: "margin-top:10px;font-weight:600" }, `${fDT(e.starts)} → ${fD(e.starts) === fD(e.ends) ? fT(e.ends) : fDT(e.ends)}`), h("div", { class: "small", style: "opacity:.85" }, `${[e.venue, e.city].filter(Boolean).join(", ")}${TZ ? " · times in " + TZ : ""}`),
     started ? h("div", { style: "margin-top:12px;font-weight:700" }, ended ? "This event has ended." : "Happening now") : countdown(e.starts),
     h("div", { class: "row", style: "margin-top:14px" }, ended ? null : h("a", { class: "btn", href: "javascript:void 0", style: "background:#fff;color:#2e1065;border-color:#fff", onclick: (ev) => { ev.preventDefault(); $("#tickets").scrollIntoView({ behavior: "smooth" }); } }, "Get tickets"), h("button", { class: "btn", style: "background:transparent;color:inherit;border-color:rgba(255,255,255,.7)", onclick: () => ics(`${e.slug}.ics`, e, []) }, "Add to calendar"))),
     h("div", { class: "two" }, h("div", { class: "stack" }, e.descr ? h("section", { class: "card" }, h("h2", {}, "About"), h("p", { style: "white-space:pre-wrap;margin:0" }, e.descr)) : null, h("h2", { style: "margin:6px 0 0" }, "Agenda"), mineBar, sessWrap, speakers), h("div", { class: "stack", style: "align-self:start" }, regBox, h("p", { class: "small muted" }, `${e.registered} of ${e.capacity} places taken.`)))), "home");
