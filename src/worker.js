@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS tickets(code TEXT PRIMARY KEY, event TEXT NOT NULL, t
 CREATE INDEX IF NOT EXISTS ev_status ON events(status,starts)`;
   }
   seed() {
+    if (this._sd) return; this._sd = true;
     const ex = this.one("SELECT id FROM events WHERE slug='ai-summit-2027'");
     if (ex) { if (!this.one("SELECT 1 x FROM slots WHERE event=?", ex.id)) this.seedSlots(ex.id); return; }
     const id = "e" + rid(5); const t = now();
