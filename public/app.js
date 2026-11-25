@@ -3,14 +3,16 @@ import qrcode from "/qrcode.js";
 import { install, reveal, tilt } from "/fx.js";
 import { theme, stageHero, beamsOnly } from "/art.js";
 import { landingView } from "/landing.js";
+import { installI18n } from "/i18n.js";
+installI18n(document.body);
 install(theme);
 const toggleTheme = initTheme();
 const S = { user: null };
 const app = $("#app");
 let timer = null;
 const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-const fD = (t) => new Date(t).toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
-const fT = (t) => new Date(t).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+const fD = (t) => new Date(t).toLocaleDateString("ar-EG", { weekday: "short", year: "numeric", month: "short", day: "numeric" });
+const fT = (t) => new Date(t).toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" });
 const fDT = (t) => `${fD(t)}, ${fT(t)}`;
 const pad = (n) => String(n).padStart(2, "0");
 const toInput = (t) => { const d = new Date(t); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
@@ -35,15 +37,17 @@ function shell(content, active) {
   if (S.user) items.push(["#/tickets", "My tickets", "tickets"], ["#/mine", "My events", "mine"]);
   items.push(["#/plans", "Plans", "plans"]); if (S.user && S.user.role === "admin") items.push(["#/admin", "Admin", "admin"]);
   items.push(S.user ? ["#/account", "Account", "account"] : ["#/login", "Log in", "login"]);
-  app.replaceChildren(h("header", { class: "topbar" }, h("div", { class: "in" }, h("a", { class: "brand", href: "#/" }, h("span", { class: "lg" }, "✦"), h("span", {}, "AI Summit")), h("nav", { class: "nav", "aria-label": "Main" }, items.map(([href, t, k]) => h("a", { href, class: active === k ? "on" : "" }, t))), h("button", { class: "btn sm", "aria-label": "Toggle dark mode", onclick: toggleTheme }, "◐"))), h("main", {}, content), siteFooter());
+  app.replaceChildren(h("header", { class: "topbar" }, h("div", { class: "in" }, h("a", { class: "brand logo", href: "#/", "aria-label": "EVENT" }, "EVENT"), h("nav", { class: "nav", "aria-label": "Main" }, items.map(([href, t, k]) => h("a", { href, class: active === k ? "on" : "" }, t))), h("button", { class: "btn sm", "aria-label": "Toggle dark mode", onclick: toggleTheme }, "◐"))), h("main", {}, content), siteFooter());
 }
 const evCard = (e) => h("a", { class: "card evcard", href: `#/e/${e.slug}` },
   h("div", { class: "date" }, `${fD(e.starts)} · ${fT(e.starts)}`), h("h3", { style: "margin:0" }, e.title), h("div", { class: "muted" }, e.tagline),
   h("div", { class: "row small muted" }, e.venue ? `📍 ${e.venue}${e.city ? ", " + e.city : ""}` : e.city, h("span", {}, `${e.registered} registered`), e.sample ? h("span", { class: "badge" }, "Sample") : null));
 
 async function landing() {
+  const at = location.hash;
   let slug = "ai-summit-2027", target = new Date("2027-03-18T09:00:00+02:00").getTime();
   try { const d = await api("/api/events?when=up"); const e = d.events.find((x) => x.sample) || d.events[0]; if (e) { slug = e.slug; target = e.starts; } } catch { /* use defaults */ }
+  if (location.hash !== at) return;
   if (timer) { clearInterval(timer); timer = null; }
   const root = landingView({ target, slug, user: S.user, toggleTheme });
   root.querySelectorAll(".lsec > *, .marq, .partners > *").forEach((e) => e.classList.add("reveal"));
