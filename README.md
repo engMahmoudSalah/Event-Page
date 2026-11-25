@@ -1,4 +1,4 @@
-# Event Page
+# AI Summit (Event Experience)
 
 Event landing page with a ticket registry, live attendee counter and ticket lookup.
 
