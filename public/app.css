@@ -23,3 +23,4 @@ table.t{width:100%;border-collapse:collapse}table.t th,table.t td{text-align:sta
 .tw{overflow-x:auto}
 .hp{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);opacity:0;pointer-events:none}
 @media print{.topbar,.sitefoot,.noprint{display:none!important}}
+.evhero .fxbg{--accent:#fff;opacity:.4}
