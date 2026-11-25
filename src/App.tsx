@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import TicketCheck from './TicketCheck';
+import { registerTicket } from './registry';
 import { ChevronDown, ChevronUp, ArrowLeft, Menu, X, Check, RefreshCw, Twitter, Linkedin, Instagram, Mail, Smartphone, Github, Globe, MapPin } from 'lucide-react';
 import Confetti from './components/Confetti';
 
@@ -71,6 +73,8 @@ export default function App() {
       });
       
       if (response.ok) {
+        // also record the ticket in the registry (best effort, never blocks the user)
+        registerTicket({ name: data.name, email: data.email, role: data.role, ticket_name: data.ticket_name, ticket_price: data.ticket_price, ticket_number: data.ticket_number });
         finalizeRegistration();
       } else {
         // في حالة الخطأ، يمكن إظهار رسالة أو التعامل معه
@@ -782,6 +786,8 @@ export default function App() {
           </button>
         </div>
       </section>
+
+      <TicketCheck />
 
       <footer className="border-t-[1.5px] border-[#1a1a1a] bg-white pt-16 pb-8 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
