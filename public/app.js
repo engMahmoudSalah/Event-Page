@@ -2,6 +2,7 @@ import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, ago, initThe
 import qrcode from "/qrcode.js";
 import { install, reveal, tilt } from "/fx.js";
 import { theme, stageHero, beamsOnly } from "/art.js";
+import { landingView } from "/landing.js";
 install(theme);
 const toggleTheme = initTheme();
 const S = { user: null };
@@ -30,7 +31,7 @@ const qrSvg = (text) => { const q = qrcode(0, "M"); q.addData(text); q.make(); r
 
 function shell(content, active) {
   if (timer) { clearInterval(timer); timer = null; }
-  const items = [["#/", "Events", "home"], ["#/lookup", "Find ticket", "lookup"]];
+  const items = [["#/", "Home", "landing"], ["#/events", "Events", "home"], ["#/lookup", "Find ticket", "lookup"]];
   if (S.user) items.push(["#/tickets", "My tickets", "tickets"], ["#/mine", "My events", "mine"]);
   items.push(["#/plans", "Plans", "plans"]); if (S.user && S.user.role === "admin") items.push(["#/admin", "Admin", "admin"]);
   items.push(S.user ? ["#/account", "Account", "account"] : ["#/login", "Log in", "login"]);
@@ -40,6 +41,15 @@ const evCard = (e) => h("a", { class: "card evcard", href: `#/e/${e.slug}` },
   h("div", { class: "date" }, `${fD(e.starts)} · ${fT(e.starts)}`), h("h3", { style: "margin:0" }, e.title), h("div", { class: "muted" }, e.tagline),
   h("div", { class: "row small muted" }, e.venue ? `📍 ${e.venue}${e.city ? ", " + e.city : ""}` : e.city, h("span", {}, `${e.registered} registered`), e.sample ? h("span", { class: "badge" }, "Sample") : null));
 
+async function landing() {
+  let slug = "ai-summit-2027", target = new Date("2027-03-18T09:00:00+02:00").getTime();
+  try { const d = await api("/api/events?when=up"); const e = d.events.find((x) => x.sample) || d.events[0]; if (e) { slug = e.slug; target = e.starts; } } catch { /* use defaults */ }
+  if (timer) { clearInterval(timer); timer = null; }
+  const root = landingView({ target, slug, user: S.user, toggleTheme });
+  root.querySelectorAll(".lsec > *, .marq, .partners > *").forEach((e) => e.classList.add("reveal"));
+  app.replaceChildren(root, siteFooter()); reveal(root);
+  document.title = "تواصل ٢٤: حدث افتراضي لرواد التقنية";
+}
 async function home() {
   const grid = h("div", { class: "grid" }); let when = "up", q = "";
   const tabs = h("div", { class: "tabs" });
@@ -197,7 +207,8 @@ async function route() {
   if (location.pathname === "/by-mahmoud") { if (location.hash.length > 1) history.replaceState(null, "", "/" + location.hash); else return shell(byMahmoudView(), ""); }
   const p = location.hash.replace(/^#/, "") || "/"; let m; document.title = "AI Summit: events, tickets and check-in";
   try {
-    if (p === "/") return await home();
+    if (p === "/") return await landing();
+    if (p === "/events") return await home();
     if ((m = p.match(/^\/e\/([a-z0-9-]+)$/))) return await eventPage(m[1]);
     if ((m = p.match(/^\/t\/(AIS-[A-Za-z0-9]+)$/))) return await ticketPage(m[1].toUpperCase());
     if (p === "/lookup") return lookup();
