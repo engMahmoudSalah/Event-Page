@@ -2,7 +2,7 @@
 @font-face{font-family:Readex;src:url(/fonts/rx400.ttf);font-weight:400;font-display:swap}
 @font-face{font-family:Readex;src:url(/fonts/rx600.ttf);font-weight:600;font-display:swap}
 @font-face{font-family:Readex;src:url(/fonts/rx700.ttf);font-weight:700 900;font-display:swap}
-:root{--lav:#c9c0ff;--lime:#d9ff00;--pink:#ff9ee0;--grn:#4ade80;--ink:#1a1a1a;--paper:#fff;--card:#fff;--lbg:#fff;--dot:rgba(0,0,0,.07);--fam:ReadexAr,Readex,system-ui,sans-serif;--lt:#1a1a1a;--shd:#1a1a1a}
+:root{--lav:#ffd35c;--lime:#d9ff00;--pink:#ff9ee0;--grn:#4ade80;--ink:#1a1a1a;--paper:#fff;--card:#fff;--lbg:#fff;--dot:rgba(0,0,0,.07);--fam:ReadexAr,Readex,system-ui,sans-serif;--lt:#1a1a1a;--shd:#1a1a1a}
 [data-theme=dark]{--ink:#f4f4f5;--paper:#171717;--card:#222;--lbg:#121212;--dot:rgba(255,255,255,.07);--lt:#1a1a1a;--shd:#000}
 body{font-family:var(--fam)}
 .land{font-family:var(--fam);color:var(--ink);background:var(--lbg);background-image:radial-gradient(var(--dot) 1.2px,transparent 1.4px);background-size:22px 22px;min-height:100vh;overflow-x:clip}
@@ -82,3 +82,8 @@ body{font-family:var(--fam)}
 @media (max-width:900px){.burger{display:flex}.ln .links,.ln .lrow{display:none!important}.ln.open .links{display:flex!important;order:5;flex:0 0 100%;flex-direction:column;gap:0;overflow:visible;padding-bottom:0}.ln.open .links a{padding:14px 4px;border-bottom:1px solid var(--ink)}.ln.open .lrow{display:flex!important;order:6;flex:0 0 100%;padding:12px 0 6px}.ln.open .lrow .lbtn.dark{flex:1}.ln .lrow{margin-inline-start:0}}
 [data-theme=dark] .sm{color:#cfc6ff}.btn.sm{color:#1a1a1a!important}[data-theme=dark] .btn.sm{color:#fff!important}
 .quick .qin a:not(.logo){display:flex;align-items:center;min-height:var(--ctl,44px)}.drawer a,.mmenu a{min-height:44px;display:flex;align-items:center}
+
+/* Summit palette v2: paper, ink, marigold, coral (replaces lavender/pink defaults). Font stays Readex (SIL OFL 1.1), self-hosted. */
+:root{--lav:#ffd35c;--lime:#ff7a59;--pink:#ffb199;--lbg:#f7f1e3;--dot:rgba(26,26,26,.09)}[data-theme=dark]{--lbg:#121212;--dot:rgba(255,255,255,.07)}
+.land h1{line-height:1.05}
+.logo{transform:rotate(-2deg)}
