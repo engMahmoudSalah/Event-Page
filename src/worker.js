@@ -95,6 +95,9 @@ CREATE INDEX IF NOT EXISTS ev_status ON events(status,starts)`;
     const e = this.one("SELECT * FROM events WHERE id=?", t.event); const tr = this.one("SELECT name,price FROM tiers WHERE id=?", t.tier);
     return { code: t.code, name: t.name, email: t.email, created: t.created, checked: t.checked, tier: tr ? tr.name : "", event: { id: e.id, slug: e.slug, title: e.title, venue: e.venue, city: e.city, starts: e.starts, ends: e.ends, sample: !!e.sample } };
   }
+  exportData(u) {
+    return { events: this.q("SELECT * FROM events WHERE owner=? LIMIT 500", u.id), tickets: this.q("SELECT code,event,tier,name,email,created,checked FROM tickets WHERE uid=? LIMIT 1000", u.id) };
+  }
   async app(c) {
     this.seed();
     const { path, method, body, url } = c; let m;
