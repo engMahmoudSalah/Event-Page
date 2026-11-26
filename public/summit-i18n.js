@@ -1,5 +1,6 @@
 // Arabic translation layer for AI Summit. Translates exact strings and a few patterns in the DOM, confirm() and toasts.
 export const D = {
+  "Share event": "شارك الفعالية", "Link copied": "تم نسخ الرابط", "Copy the link": "انسخ الرابط",
   "Home": "الرئيسية", "Events": "الفعاليات", "Find ticket": "ابحث عن تذكرة", "My tickets": "تذاكري", "My events": "فعالياتي", "Plans": "الخطط", "Admin": "الإدارة", "Account": "حسابي", "Log in": "تسجيل الدخول", "Main": "القائمة", "Toggle dark mode": "تبديل الوضع",
   "Run your event. Fill the room.": "نظّم فعاليتك. املأ القاعة.", "Publish an event with an agenda and speakers, hand out free QR tickets and check people in at the door. Attendees can build their own agenda and add it to their calendar.": "انشر فعاليتك مع الجدول والمتحدثين، وزّع تذاكر QR مجانية وسجّل الحضور عند الباب. يستطيع الحضور بناء جدولهم الخاص وإضافته إلى التقويم.",
   "Create an event": "أنشئ فعالية", "I have a ticket": "عندي تذكرة", "Upcoming": "القادمة", "Past": "السابقة", "Search by name or city": "ابحث بالاسم أو المدينة", "Search events": "ابحث في الفعاليات", "Sample": "تجريبية", "SAMPLE EVENT": "فعالية تجريبية",
