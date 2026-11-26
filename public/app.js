@@ -1,4 +1,4 @@
-import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
+import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, ago, initTheme, field, authForm, plansView, adminView, sessionsCard } from "/kit.js";
 import qrcode from "/qrcode.js";
 import { install, reveal, tilt } from "/fx.js";
 import { theme, stageHero, beamsOnly } from "/art.js";
@@ -204,7 +204,7 @@ function account() {
   shell(h("div", { class: "stack", style: "max-width:520px" }, h("h1", {}, "Account"), h("div", { class: "muted" }, `${S.user.email} · ${S.user.plan === "pro" ? "Pro" : "Free"} plan`),
     h("form", { class: "card stack", onsubmit: (e) => { e.preventDefault(); guard(async () => { S.user = (await api("/api/auth/profile", { name: name.value })).user; toast("Saved"); }); } }, h("h3", {}, "Profile"), field("Name", name), h("button", { class: "btn pri" }, "Save")),
     h("form", { class: "card stack", onsubmit: (e) => { e.preventDefault(); guard(async () => { await api("/api/auth/password", { current: cur.value, password: np.value }); cur.value = np.value = ""; toast("Password changed"); }); } }, h("h3", {}, "Change password"), field("Current password", cur), field("New password (8+ characters)", np), h("button", { class: "btn" }, "Change password")),
-    h("button", { class: "btn", onclick: () => guard(async () => { await api("/api/auth/logout", {}); S.user = null; location.hash = "#/"; route(); }) }, "Log out")), "account");
+    sessionsCard(), h("button", { class: "btn", onclick: () => guard(async () => { await api("/api/auth/logout", {}); S.user = null; location.hash = "#/"; route(); }) }, "Log out")), "account");
 }
 async function route() {
   scrollTo(0, 0);
