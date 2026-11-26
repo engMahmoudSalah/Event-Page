@@ -81,3 +81,4 @@ body{font-family:var(--fam)}
 .tkin{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s ease-out;transform-style:preserve-3d}
 @media (max-width:900px){.burger{display:flex}.ln .links,.ln .lrow{display:none!important}.ln.open .links{display:flex!important;order:5;flex:0 0 100%;flex-direction:column;gap:0;overflow:visible;padding-bottom:0}.ln.open .links a{padding:14px 4px;border-bottom:1px solid var(--ink)}.ln.open .lrow{display:flex!important;order:6;flex:0 0 100%;padding:12px 0 6px}.ln.open .lrow .lbtn.dark{flex:1}.ln .lrow{margin-inline-start:0}}
 [data-theme=dark] .sm{color:#cfc6ff}.btn.sm{color:#1a1a1a!important}[data-theme=dark] .btn.sm{color:#fff!important}
+.quick .qin a:not(.logo){display:flex;align-items:center;min-height:var(--ctl,44px)}.drawer a,.mmenu a{min-height:44px;display:flex;align-items:center}
