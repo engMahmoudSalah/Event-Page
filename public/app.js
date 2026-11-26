@@ -3,7 +3,7 @@ import qrcode from "/qrcode.js";
 import { install, reveal, tilt } from "/fx.js";
 import { theme, stageHero, beamsOnly } from "/art.js";
 import { landingView } from "/landing.js";
-import { installI18n } from "/i18n.js";
+import { installI18n } from "/summit-i18n.js";
 installI18n(document.body);
 install(theme);
 const toggleTheme = initTheme();
