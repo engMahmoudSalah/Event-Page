@@ -136,8 +136,9 @@ async function myTickets() {
 async function myEvents() {
   const d = await api("/api/my/events");
   shell(h("div", { class: "stack" }, h("div", { class: "row spread" }, h("div", {}, h("h1", { style: "margin:0" }, "My events"), h("div", { class: "muted small" }, `${d.events.length} of ${d.limit} used on your plan`)), h("a", { class: "btn pri", href: "#/new" }, "Create an event")),
-    d.events.length ? d.events.map((e) => h("div", { class: "card row spread" }, h("div", { class: "grow" }, h("a", { href: `#/e/${e.slug}`, style: "font-weight:700" }, e.title), h("div", { class: "muted small" }, `${fDT(e.starts)} · ${e.registered}/${e.capacity} registered`)),
+    d.events.length ? d.events.map((e) => h("div", { class: "card row spread" }, h("div", { class: "grow", style: "flex:1 1 100%" }, h("a", { href: `#/e/${e.slug}`, style: "font-weight:700" }, e.title), h("div", { class: "muted small" }, `${fDT(e.starts)} · ${e.registered}/${e.capacity} مسجّل`)),
       h("span", { class: "badge " + STATUS[e.status][1] }, STATUS[e.status][0]), h("a", { class: "btn sm", href: `#/checkin/${e.id}` }, "Check-in"), h("a", { class: "btn sm", href: `#/edit/${e.id}` }, "Edit"),
+      h("button", { class: "btn sm", onclick: () => guard(async () => { const r = await api(`/api/events/${e.id}/clone`, {}); toast("Copied. Check the new dates, then submit."); location.hash = `#/edit/${r.id}`; }) }, "Duplicate"),
       h("button", { class: "btn sm", onclick: () => { if (confirm(`Delete "${e.title}" and all its tickets?`)) guard(async () => { await api(`/api/events/${e.id}`, null, "DELETE"); toast("Event deleted"); myEvents(); }); } }, "Delete"))) : h("div", { class: "card empty" }, "You haven't created an event yet.")), "mine");
 }
 async function editor(id) {

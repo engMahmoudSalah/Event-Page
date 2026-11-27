@@ -163,6 +163,15 @@ CREATE INDEX IF NOT EXISTS ev_status ON events(status,starts)`;
       if (method === "DELETE") { for (const t of ["tiers", "speakers", "slots", "tickets"]) this.run(`DELETE FROM ${t} WHERE event=?`, e.id); this.run("DELETE FROM events WHERE id=?", e.id); this.audit(me.id, "event_delete", e.title); return { ok: true }; }
       if (method === "POST") { this.saveEvent(e.id, body, e); if (me.role !== "admin") this.run("UPDATE events SET status='pending',reason='' WHERE id=?", e.id); return { ok: true, status: me.role === "admin" ? e.status : "pending" }; }
     }
+    if ((m = path.match(/^\/api\/events\/([a-z0-9-]+)\/clone$/)) && method === "POST") {
+      const [me, e] = this.ownEvent(c, m[1]);
+      if (this.one("SELECT COUNT(*) n FROM events WHERE owner=?", me.id).n >= this.lim(me).events && me.role !== "admin") bad(`Your ${me.plan === "pro" ? "Pro" : "Free"} plan allows ${this.lim(me).events} events. The Pro plan is coming soon.`, 402);
+      this.limit("newe:" + me.id, 10, 3600e3);
+      const o = this.evOut(e, true), delta = Math.max(now(), e.ends) + 7 * 864e5 - e.starts, id = "e" + rid(5);
+      this.saveEvent(id, { title: `${e.title.slice(0, 90)} (نسخة)`, tagline: o.tagline, descr: o.descr, venue: o.venue, city: o.city, capacity: o.capacity, starts: e.starts + delta, ends: e.ends + delta,
+        tiers: o.tiers.map((t) => ({ name: t.name, descr: t.descr, price: t.price, qty: t.qty })), speakers: o.speakers, sessions: o.sessions.map((x) => ({ ...x, starts: x.starts + delta, ends: x.ends + delta })), _owner: me.id }, null);
+      this.audit(me.id, "event_clone", e.title); return { id, slug: this.one("SELECT slug FROM events WHERE id=?", id).slug };
+    }
     if ((m = path.match(/^\/api\/events\/([a-z0-9-]+)\/attendees$/)) && method === "GET") {
       const [, e] = this.ownEvent(c, m[1]);
       return { attendees: this.q("SELECT t.code,t.name,t.email,t.created,t.checked,r.name tier FROM tickets t LEFT JOIN tiers r ON r.id=t.tier WHERE t.event=? ORDER BY t.created DESC LIMIT 5000", e.id), event: this.evOut(e, true) };
