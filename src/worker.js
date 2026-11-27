@@ -15,7 +15,7 @@ const SEED_SESSIONS = [
   ["Closing and networking", "Wrap-up, raffle and open networking.", "", "Lobby", 9, 1.5],
 ];
 export class Hub extends BaseHub {
-  adminHash() { return "3954f4c578cae100a111e4a8e3f3a02ed85d1f71944dacd76fb23b0eea2779e0"; }
+  adminHash() { return this.env.ADMIN_HASH || null; }
   schemaSQL() {
     return `CREATE TABLE IF NOT EXISTS events(id TEXT PRIMARY KEY, slug TEXT UNIQUE NOT NULL, owner TEXT NOT NULL, title TEXT NOT NULL, tagline TEXT NOT NULL DEFAULT '', descr TEXT NOT NULL DEFAULT '', venue TEXT NOT NULL DEFAULT '', city TEXT NOT NULL DEFAULT '', starts INTEGER NOT NULL, ends INTEGER NOT NULL, capacity INTEGER NOT NULL DEFAULT 100, status TEXT NOT NULL DEFAULT 'pending', reason TEXT NOT NULL DEFAULT '', sample INTEGER NOT NULL DEFAULT 0, created INTEGER NOT NULL, updated INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS tiers(id TEXT PRIMARY KEY, event TEXT NOT NULL, name TEXT NOT NULL, descr TEXT NOT NULL DEFAULT '', price INTEGER NOT NULL DEFAULT 0, qty INTEGER NOT NULL DEFAULT 0, pos INTEGER NOT NULL DEFAULT 0);
