@@ -23,7 +23,7 @@ const agendaGet = () => { try { return JSON.parse(localStorage.getItem("ais_agen
 const agendaSet = (a) => localStorage.setItem("ais_agenda", JSON.stringify(a));
 const ics = (name, ev, sessions) => {
   const z = (t) => new Date(t).toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
-  const esc = (s) => String(s || "").replace(/[\\;,]/g, (m) => "\\" + m).replace(/\n/g, "\\n");
+  const esc = (s) => String(s || "").replace(/[\\;,]/g, (m) => "\\" + m).replace(/\r\n|\r|\n/g, "\\n");
   const rows = sessions.length ? sessions.map((s) => [s.id, s.title, s.starts, s.ends, [s.room, s.speaker].filter(Boolean).join(" / ")]) : [[ev.id, ev.title, ev.starts, ev.ends, ev.venue]];
   const body = rows.map((r) => `BEGIN:VEVENT\r\nUID:${r[0]}@ai-summit\r\nDTSTAMP:${z(Date.now())}\r\nDTSTART:${z(r[2])}\r\nDTEND:${z(r[3])}\r\nSUMMARY:${esc(r[1])}\r\nLOCATION:${esc(r[4] || ev.venue)}\r\nEND:VEVENT`).join("\r\n");
   download(name, "text/calendar", `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//AI Summit//EN\r\n${body}\r\nEND:VCALENDAR\r\n`);
