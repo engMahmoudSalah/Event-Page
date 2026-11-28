@@ -163,11 +163,11 @@ async function editor(id) {
 async function checkin(id) {
   const d = await api(`/api/events/${id}/attendees`); const e = d.event; let list = d.attendees;
   const res = h("div", { class: "res", "aria-live": "polite" }, "Scan or type a ticket code");
-  const stats = h("div", { class: "row" }); const body = h("tbody"); let filter = "";
+  const stats = h("div", { class: "row" }); const body = h("tbody"); let filter = "", only = "all";
   const code = h("input", { placeholder: "Ticket code (AIS-…)", autocapitalize: "characters", "aria-label": "Ticket code", autofocus: true });
   const draw = () => {
     const n = list.filter((a) => a.checked).length; stats.replaceChildren(h("span", { class: "badge acc" }, `${n} checked in`), h("span", { class: "badge" }, `${list.length} registered`), h("span", { class: "badge" }, `${e.capacity} capacity`));
-    body.replaceChildren(...list.filter((a) => !filter || (a.name + a.email + a.code).toLowerCase().includes(filter)).map((a) => h("tr", {}, h("td", {}, a.name, h("div", { class: "muted small" }, a.email)), h("td", { class: "code small" }, a.code), h("td", {}, a.tier || ""), h("td", {}, a.checked ? h("span", { class: "badge ok" }, "In") : h("span", { class: "badge" }, "Not yet")),
+    body.replaceChildren(...list.filter((a) => (only === "all" || (only === "in") === !!a.checked) && (!filter || (a.name + a.email + a.code).toLowerCase().includes(filter))).map((a) => h("tr", {}, h("td", {}, a.name, h("div", { class: "muted small" }, a.email)), h("td", { class: "code small" }, a.code), h("td", {}, a.tier || ""), h("td", {}, a.checked ? h("span", { class: "badge ok" }, "In") : h("span", { class: "badge" }, "Not yet")),
       h("td", {}, h("button", { class: "btn sm", onclick: () => send(a.code, !!a.checked) }, a.checked ? "Undo" : "Check in")))));
   };
   const send = async (c, undo) => {
@@ -187,8 +187,8 @@ async function checkin(id) {
       const loop = async () => { if (!on) return; try { const r = await det.detect(v); if (r[0]) { stop(); mm.close(); send(r[0].rawValue, false); return; } } catch { /* retry */ } setTimeout(loop, 300); }; loop();
     } catch { toast("Couldn't open the camera.", true); } } }, "Scan with camera");
   shell(h("div", { class: "stack" }, h("div", { class: "row spread" }, h("div", {}, h("h1", { style: "margin:0" }, `Check-in: ${e.title}`), h("a", { href: `#/e/${e.slug}`, class: "small" }, "← Event page")), h("div", { class: "row" }, h("button", { class: "btn sm", onclick: () => { const esc = (s) => { let v = String(s ?? ""); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return `"${v.replace(/"/g, '""')}"`; }; download(`${e.slug}-attendees.csv`, "text/csv", "name,email,ticket,code,registered,checked_in\n" + list.map((a) => [a.name, a.email, a.tier, a.code, new Date(a.created).toISOString(), a.checked ? new Date(a.checked).toISOString() : ""].map(esc).join(",")).join("\n")); } }, "Export CSV"))),
-    h("form", { class: "card stack", onsubmit: (ev) => { ev.preventDefault(); if (code.value.trim()) send(code.value, false); } }, h("div", { class: "row" }, h("div", { class: "grow" }, code), h("button", { class: "btn pri" }, "Check in"), scan), res), stats,
-    h("div", { class: "card stack" }, h("input", { type: "search", placeholder: "Search attendees", "aria-label": "Search attendees", oninput: (x) => { filter = x.target.value.toLowerCase(); draw(); } }), h("div", { class: "tw" }, h("table", { class: "t" }, h("thead", {}, h("tr", {}, ["Attendee", "Code", "Ticket", "Status", ""].map((x) => h("th", {}, x)))), body)))), "mine");
+    h("form", { class: "card stack", onsubmit: (ev) => { ev.preventDefault(); if (code.value.trim()) send(code.value, false); } }, h("div", { class: "row" }, h("div", { class: "grow", style: "min-width:200px" }, code), h("button", { class: "btn pri" }, "Check in"), scan), res), stats,
+    h("div", { class: "card stack" }, h("div", { class: "row" }, h("div", { class: "grow", style: "min-width:200px" }, h("input", { type: "search", placeholder: "Search attendees", "aria-label": "Search attendees", oninput: (x) => { filter = x.target.value.toLowerCase(); draw(); } })), h("select", { "aria-label": "Show", style: "width:auto;flex:0 1 190px", onchange: (x) => { only = x.target.value; draw(); } }, [["all", "All attendees"], ["in", "Checked in only"], ["out", "Not checked in"]].map(([v, l]) => h("option", { value: v }, l)))), h("div", { class: "tw" }, h("table", { class: "t" }, h("thead", {}, h("tr", {}, ["Attendee", "Code", "Ticket", "Status", ""].map((x) => h("th", {}, x)))), body)))), "mine");
   draw(); setTimeout(() => code.focus(), 50);
 }
 async function admin() {
