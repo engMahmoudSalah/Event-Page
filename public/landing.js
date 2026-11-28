@@ -26,7 +26,7 @@ export function landingView({ target, slug, user, toggleTheme }) {
 
   const closeNav = () => nav.classList.remove("open");
   const nav = h("header", { class: "ln", onclick: (e) => { if (e.target.closest(".links a, .lrow .lbtn.dark")) closeNav(); } }, h("div", { class: "ln-in" },
-    h("a", { class: "logo", href: "#/", "aria-label": "EVENT" }, "EVENT"),
+    h("a", { class: "logo", href: "#/", "aria-label": "AI Summit" }, "AI Summit"),
     h("button", { class: "burger", "aria-label": "القائمة", "aria-expanded": "false", onclick: (e) => { const o = nav.classList.toggle("open"); e.currentTarget.setAttribute("aria-expanded", o); }, html: "<i></i><i></i><i></i>" }),
     h("div", { class: "chips", "aria-hidden": "true" }, chips),
     h("nav", { class: "links", "aria-label": "الأقسام" }, [["event", "الحدث"], ["projects", "المشاريع"], ["speakers", "المتحدثون"], ["schedule", "الجدول"], ["faq", "الأسئلة الشائعة"]].map(([id, t]) => h("a", { href: "javascript:void 0", onclick: (e) => { e.preventDefault(); go(id); } }, t)), h("a", { href: "#/events" }, "الفعاليات")),
@@ -70,7 +70,7 @@ export function landingView({ target, slug, user, toggleTheme }) {
 
   const cta = h("section", { class: "lsec" }, h("div", { class: "cta" }, h("h2", {}, "احجز مقعدك"), h("p", {}, "لا تفوت فرصة التعرف على أحدث المنتجات، تحديثات الميزات، والرؤى التي تساعدك على تنمية أعمالك."), h("button", { class: "lbtn white big", onclick: reg }, "سجل حضورك الآن ←")));
 
-  const quick = h("section", { class: "quick" }, h("div", { class: "qin" }, h("div", {}, h("a", { class: "logo", href: "#/" }, "EVENT"), h("p", {}, "الحدث التقني الأبرز في المنطقة. نجمع بين المبتكرين، المطورين، ورواد الأعمال لبناء مستقبل التكنولوجيا المالية والخدمات المصرفية المفتوحة.")),
+  const quick = h("section", { class: "quick" }, h("div", { class: "qin" }, h("div", {}, h("a", { class: "logo", href: "#/" }, "AI Summit"), h("p", {}, "الحدث التقني الأبرز في المنطقة. نجمع بين المبتكرين، المطورين، ورواد الأعمال لبناء مستقبل التكنولوجيا المالية والخدمات المصرفية المفتوحة.")),
     h("div", {}, h("h4", {}, "روابط سريعة"), [["event", "الحدث"], ["projects", "المشاريع"], ["speakers", "المتحدثون"], ["schedule", "الجدول الزمني"], ["faq", "الأسئلة الشائعة"]].map(([id, t]) => h("a", { href: "javascript:void 0", onclick: (e) => { e.preventDefault(); go(id); } }, t))),
     h("div", {}, h("h4", {}, "المنصة"), h("a", { href: "#/events" }, "كل الفعاليات"), h("a", { href: "#/new" }, "أنشئ فعالية"), h("a", { href: "#/lookup" }, "ابحث عن تذكرتك"), h("a", { href: "#/plans" }, "الخطط"), h("a", { href: user ? "#/account" : "#/login" }, user ? "حسابي" : "دخول / حساب جديد"), user && user.role === "admin" ? h("a", { href: "#/admin" }, "لوحة الإدارة") : null)));
 
